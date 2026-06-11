@@ -1,0 +1,420 @@
+/* color shortcuts */
+:root {
+    --palette-cyan-deep: #40e0d0;
+    --palette-cyan-light: #66e6d9;
+    --palette-gray-neutral: #cccccc;
+    --palette-orange-subtle: #f38630;
+    --palette-orange-intense: #fa6901;
+    
+    --bg-app-canvas: #f8f9fa;
+    --bg-card-canvas: #ffffff;
+    --border-smoke: #ced0d4;
+    --text-charcoal: #1c1e21;
+    --text-slate: #65676b;
+    --error-crimson: #dc3545;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-app-canvas);
+    color: var(--text-charcoal);
+    line-height: 1.5;
+    padding: 40px 20px;
+}
+
+/* main frame layout */
+.dashboardContainer {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.appHeader {
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--bg-card-canvas);
+    border: 1px solid var(--border-smoke);
+    border-radius: 12px;
+}
+
+.appHeader h1 {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+/* --- LIVE EDITABLE WALLET MODULE DESIGN --- */
+.walletWrapper {
+    background-color: #f0f2f5;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px dashed var(--palette-cyan-deep);
+    text-align: right;
+}
+
+.walletLabel {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-slate);
+    display: block;
+}
+
+.walletBalanceArea {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-charcoal);
+}
+
+#walletValue {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+#walletValue:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 2px var(--palette-cyan-deep);
+}
+
+/* metrics card */
+.analyticsSection {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.metricCard, .entryCard, .ledgerCard {
+    background: var(--bg-card-canvas);
+    border: 1px solid var(--border-smoke);
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.metricCard h3, .entryCard h2, .ledgerCard h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-slate);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+.totalRow {
+    margin-top: 14px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border-smoke);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.totalRow strong {
+    font-size: 24px;
+    color: var(--palette-orange-intense);
+}
+
+/* --- ASYNC NETWORK TRANSLATION INTERFACE --- */
+.conversionConsole {
+    background: #fdfaf7;
+    border: 1px solid var(--palette-orange-subtle);
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.conversionControls {
+    display: flex;
+    gap: 8px;
+}
+
+.conversionControls select {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-smoke);
+    background: #fff;
+}
+
+.conversionControls button {
+    flex-grow: 1;
+    background-color: var(--palette-orange-subtle);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.conversionControls button:hover:not(:disabled) {
+    background-color: var(--palette-orange-intense);
+}
+
+.conversionControls button:disabled {
+    background-color: var(--palette-gray-neutral);
+    cursor: not-allowed;
+}
+
+.conversionDisplay {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-charcoal);
+}
+
+/* chart/graph */
+.graphMetrics {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wheelContainer {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin-bottom: 16px;
+}
+
+.pieChartGraphic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* Dynamically controlled calculation via CSS background string injection mapping rules */
+    background: conic-gradient(var(--palette-gray-neutral) 0% 100%);
+    transition: background 0.4s ease;
+}
+
+.pieChartGraphic::after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: var(--bg-card-canvas);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+
+.legendGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.legendDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* transaction form */
+.dataEntrySection {
+    grid-column: span 1;
+}
+
+.inputForm {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.inputGroup label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-slate);
+}
+
+.inputGroup input, .inputGroup select {
+    padding: 10px;
+    border: 1px solid var(--border-smoke);
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.inputGroup input:focus, .inputGroup select:focus {
+    border-color: var(--palette-cyan-deep);
+    box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.15);
+}
+
+.submitFormBtn {
+    background-color: var(--palette-cyan-deep);
+    color: var(--text-charcoal);
+    font-weight: 700;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+    margin-top: 6px;
+}
+
+.submitFormBtn:hover {
+    background-color: var(--palette-cyan-light);
+}
+
+/* lists/table */
+.ledgerDisplaySection {
+    grid-column: span 1;
+}
+
+.ledgerCard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ledgerControlsHeader {
+    margin-bottom: 16px;
+}
+
+.filterSortToolbar {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.controlTool {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 4px;
+}
+
+.controlTool label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-slate);
+}
+
+.controlTool select {
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border-smoke);
+    font-size: 13px;
+}
+
+.tableFrame {
+    width: 100%;
+    border: 1px solid var(--border-smoke);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#ledgerTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+
+#ledgerTable th {
+    background-color: #f0f2f5;
+    color: var(--text-slate);
+    font-weight: 700;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-smoke);
+}
+
+#ledgerTable td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-smoke);
+    color: var(--text-charcoal);
+}
+
+#ledgerTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.textCenter {
+    text-align: center;
+}
+
+/* actions */
+.deleteRowBtn {
+    background: transparent;
+    color: var(--error-crimson);
+    border: 1px solid var(--error-crimson);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.deleteRowBtn:hover {
+    background: var(--error-crimson);
+    color: #fff;
+}
+
+/* validations/errors */
+.inlineError {
+    background-color: #fff5f5;
+    color: var(--error-crimson);
+    border: 1px solid #fac5c5;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.emptyStateBlock {
+    padding: 30px;
+    text-align: center;
+    background: #f0f2f5;
+    border: 1px dashed var(--border-smoke);
+    border-radius: 8px;
+    color: var(--text-slate);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* for mobile view */
+@media (max-width: 850px) {
+    .dashboardContainer, .analyticsSection {
+        grid-template-columns: 1fr;
+    }
+    .appHeader, .analyticsSection, .dataEntrySection, .ledgerDisplaySection {
+        grid-column: span 1;
+    }
+}

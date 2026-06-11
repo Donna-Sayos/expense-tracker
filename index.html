@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Expense Tracker Dashboard</title>
+
+        <link rel="stylesheet" href="styles.css" >
+    </head>
+
+    <body>
+        <main class="dashboardContainer">
+            <header class="appHeader">
+                <h1>Financial Ledger Hub</h1>
+                <div class="walletWrapper">
+                    <span class="walletLabel">Available Balance:</span>
+                    <div class="walletBalanceArea">
+                        <span id="walletSymbol">$</span>
+                        <span id="walletValue" contenteditable="true" title="Click to modify baseline balance">1000.00</span>
+                    </div>
+                </div>
+            </header>
+
+            <section class="analyticsSection">
+                <div class="metricCard textMetrics">
+                    <h3>Ledger Book Balance Sheets</h3>
+                    <p>Entry Tracker: <span id="metricsCount">0</span></p>
+
+                    <div class="totalRow">
+                        <span>Total Expenses (USD)</span>
+                        <strong id="totalUSD">$0.00</strong>
+                    </div>
+
+                    <div class="conversionConsole">
+                        <div class="conversionControls">
+                            <select id="currencyTarget" title="Target Exchange Node">
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="JYP">JPY (¥)</option>
+                                <option value="CAD">CAD ($)</option>
+                            </select>
+                            <button id="convertBtn" type="button">Convert Currency</button>
+                        </div>
+                        <div id="conversionResult" class="conversionDisplay"></div>
+                        <div id="asyncErrorFeedback" class="errorText inlineError hidden"></div>
+                    </div>
+                </div>
+
+                <div class="metricCard graphMetrics">
+                    <h3>Expense Breakdown</h3>
+                    <div class="wheelContainer">
+                        <div id="colorWheelGraph" class="pieChartGraphic"></div>
+                    </div>
+                    <div id="chartLegend" class="legendGrid"></div>
+                </div>
+            </section>
+
+            <section class="dataEntrySection">
+                <div class="entryCard">
+                    <h2>Log Expense</h2>
+                    <div id="formValidationError" class="inlineError hidden"></div>
+
+                    <form id="expenseForm" class="inputForm" novalidate>
+                        <div class="inputGroup">
+                            <label for="expDescription">Entry Description</label>
+                            <input type="text" id="expDescription" placeholder="e.g., Iced Matcha Latte" required>
+                        </div>
+
+                        <div class="inputGroup">
+                            <label for="expAmount">Expense Amount (USD)</label>
+                            <input type="number" id="expAmount" min="0" step="0.01" placeholder="0.00" required>
+                        </div>
+
+                        <div class="inputGroup">
+                            <label for="expCategory">Expense Type</label>
+                            <select id="expCategory" required>
+                                <option value="" disabled selected>Choose Category...</option>
+                                <option value="Food">Food & Dining</option>
+                                <option value="Transport">Transit / Travel</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Other">Other Expenses</option>
+                            </select>
+                        </div>
+
+                        <div class="inputGroup">
+                            <label for="expDate">Transaction Date</label>
+                            <input type="date" id="expDate" required>
+                        </div>
+
+                        <button type="submit" class="submitFormBtn">Save Entry</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="ledgerDisplaySection">
+                <div class="ledgerCard">
+                    <div class="ledgerControlsHeader">
+                        <h2>Expense History</h2>
+
+                        <div class="filterSortToolbar">
+                            <div class="controlTool">
+                                <label for="filterCategory">Filter</label>
+                                <select id="filterCategory">
+                                    <option value="All">All Categories</option>
+                                    <option value="Food">Food & Dining</option>
+                                    <option value="Transport">Transit / Travel</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Other">Other Expenses</option>
+                                </select>
+                            </div>
+
+                            <div class="controlTool">
+                                <label for="sortSelector">Sort By</label>
+                                <select id="sortSelector">
+                                    <option value="date-desc">Date: Most Recent</option>
+                                    <option value="date-asc">Date: Oldest</option>
+                                    <option value="amount-desc">Amount: High to Low</option>
+                                    <option value="amount-asc">Amount: Low to High</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tableFrame">
+                        <table id="ledgerTable">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Timestamp</th>
+                                    <th>Amount (USD)</th>
+                                    <th class="textCenter">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ledgerTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script src="script.js"></script>
+    </body>
+</html>
