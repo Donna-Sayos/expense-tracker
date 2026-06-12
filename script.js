@@ -8,11 +8,11 @@ let appState = {
 };
 
 const categoryColors = {
-  Food: "#40e0d0",
-  Transport: "#66e6d9",
-  Entertainment: "#f38630",
-  Other: "#fa6901",
-  Unallocated: "#cccccc",
+  Food: "#34d399",
+  Transport: "#60a5fa",
+  Entertainment: "#a78bfa",
+  Other: "#fb923c",
+  Unallocated: "#e2e8f0",
 };
 
 // grabs all necessary dom elements
@@ -354,8 +354,15 @@ function render() {
   const visibleExpenses = getFilteredExpenses();
   const currentTotal = calculateTotal(visibleExpenses);
 
+  const totalAllExpenses = calculateTotal(appState.expenses);
+  const remainingBalance = appState.walletBalance - totalAllExpenses;
+
+  // update metrics
   dom.metricsCount.textContent = visibleExpenses.length.toString();
   dom.totalUSD.textContent = `$${currentTotal.toFixed(2)}`;
+
+  // update wallet balance
+  dom.walletValue.textContent = remainingBalance.toFixed(2);
 
   updateColorWheel(visibleExpenses, currentTotal);
   renderTable(visibleExpenses);
