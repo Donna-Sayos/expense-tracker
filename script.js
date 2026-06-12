@@ -159,7 +159,7 @@ function handleFormSubmit(e) {
 }
 
 function deleteExpense(id) {
-  appState.expenses = appState.expenses?.filter((item) => item.id !== id);
+  appState.expenses = appState.expenses.filter((item) => item.id !== id);
   saveToLocalStorage();
   dom.conversionResult.textContent = "";
   render();
@@ -180,7 +180,7 @@ function handleWalletEdit() {
 
 function getFilteredExpenses() {
   // filter based on expense type
-  let result = appState.expenses?.filter((item) => {
+  let result = appState.expenses.filter((item) => {
     if (appState.filters.category === "All") {
       return true;
     } else {
@@ -189,7 +189,7 @@ function getFilteredExpenses() {
   });
 
   // sort
-  result?.sort((a, b) => {
+  result.sort((a, b) => {
     switch (appState.filters.sortBy) {
       case "date-asc":
         return new Date(a.date) - new Date(b.date);
@@ -207,7 +207,7 @@ function getFilteredExpenses() {
   return result;
 }
 function calculateTotal(expenseArr) {
-  return expenseArr?.reduce((sum, item) => {
+  return expenseArr.reduce((sum, item) => {
     return sum + item.amount;
   }, 0);
 }
@@ -272,7 +272,7 @@ function updateColorWheel(visibleExpenses, currentTotal) {
 
   if (currentTotal === 0) {
     dom.colorWheelGraph.style.background = `conic-gradient(${categoryColors["Unallocated"]} 0% 100%)`;
-    categories?.forEach((cat) =>
+    categories.forEach((cat) =>
       renderLegendItem(cat, categoryColors[cat], 0, 0),
     );
     return;
@@ -281,10 +281,8 @@ function updateColorWheel(visibleExpenses, currentTotal) {
   let gradientSegments = [];
   let cumulativePercentage = 0;
 
-  categories?.forEach((cat) => {
-    const catExpenses = visibleExpenses?.filter(
-      (item) => item.category === cat,
-    );
+  categories.forEach((cat) => {
+    const catExpenses = visibleExpenses.filter((item) => item.category === cat);
     const catTotal = calculateTotal(catExpenses);
     const percentage = (catTotal / currentTotal) * 100;
 
@@ -310,34 +308,45 @@ function updateColorWheel(visibleExpenses, currentTotal) {
 function renderTable(expensesToDisplay) {
   dom.tableBody.innerHTML = "";
 
-  // if empty state
+  // Find the frame container directly
+  const tableFrameContainer = document.querySelector(".tableFrame");
+
+  // Empty State
   if (expensesToDisplay.length === 0) {
-    dom.tableBody.closest(".tableFrame").classList.add("hidden");
-    dom.emptyState.classList.remove("hidden");
-    dom.emptyState.textContent =
-      appState.expenses.length === 0
-        ? "Your ledger is completely empty. Add your first expense above!"
-        : "No expenses match your active category filter.";
-    return;
+    if (tableFrameContainer) tableFrameContainer.classList.add("hidden");
+    if (dom.emptyState) {
+      dom.emptyState.classList.remove("hidden");
+      dom.emptyState.textContent =
+        appState.expenses.length === 0
+          ? "Your ledger is completely empty. Add your first expense above!"
+          : "No expenses match your active category filter.";
+    }
+    return; // Exit function early
   }
 
-  dom.tableBody.closest(".tableFrame").classList.remove("hidden");
-  dom.emptyState.classList.add("hidden");
+  if (tableFrameContainer) tableFrameContainer.classList.remove("hidden");
+  if (dom.emptyState) dom.emptyState.classList.add("hidden");
 
-  expensesToDisplay?.forEach((item) => {
+  // Populate Rows
+  expensesToDisplay.forEach((item) => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-            <td>${item.description}</td> [cite: 40]
-            <td><span class="roleBadge" style="background-color: ${categoryColors[item.category]}20; color: ${categoryColors[item.category]}; padding: 4px 8px; border-radius: 4px; font-weight:700; font-size:11px;">${item.category}</span></td> [cite: 40]
-            <td class="tableDate">${item.date}</td> [cite: 40]
-            <td style="font-weight: 700;">$${item.amount.toFixed(2)}</td> [cite: 40]
-            <td class="textCenter"><button type="button" class="deleteRowBtn">Delete</button></td> [cite: 41]
-        `;
+        <td>${item.description}</td>
+        <td>
+          <span class="roleBadge" style="background-color: ${categoryColors[item.category]}20; color: ${categoryColors[item.category]}; padding: 4px 8px; border-radius: 4px; font-weight:700; font-size:11px;">
+            ${item.category}
+          </span>
+        </td>
+        <td class="tableDate" style="white-space: nowrap;">${item.date}</td>
+        <td style="font-weight: 700;">$${item.amount.toFixed(2)}</td>
+        <td class="textCenter"><button type="button" class="deleteRowBtn">Delete</button></td>
+    `;
 
     row
       .querySelector(".deleteRowBtn")
       .addEventListener("click", () => deleteExpense(item.id));
+
     dom.tableBody.appendChild(row);
   });
 }
